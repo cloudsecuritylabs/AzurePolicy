@@ -14,18 +14,6 @@
           "not": {
             "anyOf": [
               {
-                "field": "Microsoft.Compute/imagePublisher",
-                "in": [
-                  "MicrosoftWindowsServer"
-                ]
-              },
-              {
-                "field": "Microsoft.Compute/imageOffer",
-                "in": [
-                  "WindowsServer"
-                ]
-              },
-              {
                 "field": "Microsoft.Compute/imageSku",
                 "like": "2012-r2-datacenter-*"
               },
