@@ -1,0 +1,46 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "in": [
+            "Microsoft.Compute/virtualMachines",
+            "Microsoft.Compute/VirtualMachineScaleSets"
+          ]
+        },
+        {
+          "not": {
+            "anyOf": [
+              {
+                "field": "Microsoft.Compute/imagePublisher",
+                "in": [
+                  "MicrosoftWindowsServer"
+                ]
+              },
+              {
+                "field": "Microsoft.Compute/imageOffer",
+                "in": [
+                  "WindowsServer"
+                ]
+              },
+              {
+                "field": "Microsoft.Compute/imageSku",
+                "like": "2012-r2-datacenter-*"
+              },
+              {
+                "field": "Microsoft.Compute/imageSku",
+                "like": "82*"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
