@@ -1,0 +1,38 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "in": [
+            "Microsoft.Compute/virtualMachines",
+            "Microsoft.Compute/VirtualMachineScaleSets"
+          ]
+        },
+        {
+          "not": {
+            "anyOf": [
+              {
+                "field": "Microsoft.Compute/imageSku",
+                "exists": "false"
+              },
+              {
+                "field": "Microsoft.Compute/imageSku",
+                "equals": "2019-Datacenter"
+              },
+              {
+                "field": "Microsoft.Compute/imageSku",
+                "equals": "2016-Datacenter"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
