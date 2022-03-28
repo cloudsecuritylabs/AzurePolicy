@@ -1,0 +1,21 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "Microsoft.ContainerInstance/containerGroups/ipAddress.type",
+          "equals": "Public"
+        },
+        {
+          "field": "type",
+          "equals": "Microsoft.ContainerInstance/containerGroups"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
