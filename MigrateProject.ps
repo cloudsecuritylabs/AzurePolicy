@@ -1,0 +1,13 @@
+Login-AzAccount
+Set-AzContext -SubscriptionName "my-subscription"
+$token = Get - AzAccessToken - ResourceUrl https: // management.azure.com
+
+$headers = @{
+Accept = "application/json"
+Authorization = "Bearer " + $token.token.ToString()}
+
+$uri = "https://management.azure.com/subscriptions/sub-id/resourceGroups/rg-name/providers/Microsoft.Migrate/MigrateProjects/name-of-migrate-project?api-version=2018-09-01-preview"
+$body = "{location: 'centralus', properties: {}}"
+$contentype="application/json"
+
+Invoke - RestMethod - Uri $uri - Method put - Headers $headers - ContentType $contentype - Body $body
