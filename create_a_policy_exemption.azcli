@@ -1,0 +1,8 @@
+
+
+az policy exemption create -n "Golden Image Exemption - RITM1XXXX22222" \
+    --policy-assignment "/providers/Microsoft.Management/managementGroups/mg/providers/Microsoft.Authorization/policyAssignments/XXXX9999999999" \
+    --exemption-category "Waiver" \
+    --scope "/subscriptions/999xxxxxxyyyyyyyyzzz" \
+    --expires-on "2022-08-31T12Z" \
+    --description "RITM - reason for exemption"
