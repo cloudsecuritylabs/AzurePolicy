@@ -1,0 +1,4 @@
+# Get list of azure subscriptions with ID and Name
+    resourcecontainers
+    | where type == 'microsoft.resources/subscriptions'
+    | project subscriptionId, subscriptionName = name
