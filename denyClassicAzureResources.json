@@ -1,0 +1,12 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "contains": "Microsoft.classic"
+    },
+    "then": {
+      "effect": "deny"
+    }
+  }
+}
