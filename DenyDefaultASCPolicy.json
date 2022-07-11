@@ -1,0 +1,25 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Authorization/policyAssignments"
+        },
+        {
+          "field": "Microsoft.Authorization/policyAssignments/policyDefinitionId",
+          "contains": "/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8"
+        },
+        {
+          "field": "Microsoft.Authorization/policyAssignments/scope",
+          "contains": "/subscriptions/"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
