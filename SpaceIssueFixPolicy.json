@@ -1,0 +1,65 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "not": {
+            "field": "type",
+            "equals": "Microsoft.Authorization/roleAssignments"
+          }
+        },
+        {
+          "value": "[string(field('tags'))]",
+          "contains": " "
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "__AzureDevOpsElasticPoolTimeStamp"
+          }
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "AzHydration-ManagedDisk-CreatedBy"
+          }
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "hidden-link: /"
+          }
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "FQPoolName"
+          }
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "CreatedBy"
+          }
+        },
+        {
+          "not": {
+            "field": "name",
+            "contains": "asrseeddisk"
+          }
+        },
+        {
+          "not": {
+            "value": "[string(field('tags'))]",
+            "contains": "ASR-FODisk"
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {}
+}
