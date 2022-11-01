@@ -2,3 +2,22 @@
     resourcecontainers
     | where type == 'microsoft.resources/subscriptions'
     | project subscriptionId, subscriptionName = name
+
+
+# list of all manually added routes/UDRs in all of your Route Tables(RT) in all subnets in all subscriptions.
+resources
+| where type =~ "Microsoft.Network/routeTables"
+| mv-expand rules = properties.routes
+| join kind=leftouter (resourcecontainers 
+| where type=='microsoft.resources/subscriptions' 
+| project SubcriptionName=name, subscriptionId) on subscriptionId
+| extend subnet_name = split((split(tostring(properties.subnets), '/'))[10], '"')[0]
+| extend addressPrefix = tostring(rules.properties.addressPrefix)
+| extend nextHopType = tostring(rules.properties.nextHopType)
+| extend nextHopIpAddress = tostring(rules.properties.nextHopIpAddress)
+| extend hasBgpOverride = tostring(rules.properties.hasBgpOverride)
+| extend provisioningState = tostring(rules.properties.provisioningState)
+| extend udrname = rules.name
+| extend rtname = name
+| project SubcriptionName, resourceGroup, subnet_name, rtname, udrname, addressPrefix, nextHopType, nextHopIpAddress, provisioningState, hasBgpOverride
+| sort by SubcriptionName, resourceGroup asc, rtname asc, addressPrefix asc
