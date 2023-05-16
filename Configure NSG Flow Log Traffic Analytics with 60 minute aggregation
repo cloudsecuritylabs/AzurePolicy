@@ -1,0 +1,166 @@
+{
+    "properties": {
+        "displayName": "Configure NSG Flow Log Traffic Analytics with 60 minute aggregation",
+        "policyType": "Custom",
+        "description": "Checks all Flow Logs. If the Flow Log has Traffic Analytics enabled and the Analytics Interval is set to 10 minutes, the Policy updates the setting to 60 minutes.",
+        "metadata": {
+            "category": "Flow Logs"
+        },
+        "mode": "All",
+        "parameters": {},
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Network/networkWatchers/flowlogs"
+                    },
+                    {
+                        "field": "Microsoft.Network/networkWatchers/flowLogs/flowAnalyticsConfiguration.networkWatcherFlowAnalyticsConfiguration.enabled",
+                        "equals": true
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deployIfNotExists",
+                "details": {
+                    "type": "Microsoft.Network/networkWatchers/flowlogs",
+                    "name": "[field('fullName')]",
+                    "existenceCondition": {
+                        "field": "Microsoft.Network/networkWatchers/flowLogs/flowAnalyticsConfiguration.networkWatcherFlowAnalyticsConfiguration.trafficAnalyticsInterval",
+                        "equals": 60
+                    },
+                    "roleDefinitionIds": [
+                        "/subscriptions/07fe3d7c-7ed4-42f1-b87e-6a4748d28824/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "deployment": {
+                        "properties": {
+                            "mode": "incremental",
+                            "template": {
+                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {
+                                    "storageId": {
+                                        "type": "String"
+                                    },
+                                    "flowlogName": {
+                                        "type": "String"
+                                    },
+                                    "flowlogFullName": {
+                                        "type": "String"
+                                    },
+                                    "netWatcherRG": {
+                                        "type": "String"
+                                    },
+                                    "location": {
+                                        "type": "String"
+                                    },
+                                    "targetResource": {
+                                        "type": "String"
+                                    },
+                                    "enabled": {
+                                        "type": "bool"
+                                    },
+                                    "retentionPolicy": {
+                                        "type": "object"
+                                    },
+                                    "format": {
+                                        "type": "object"
+                                    },
+                                    "analyticsWorkspaceId": {
+                                        "type": "String"
+                                    },
+                                    "analyticsWorkspaceRegion": {
+                                        "type": "String"
+                                    },
+                                    "analyticsWorkspaceResourceId": {
+                                        "type": "String"
+                                    }
+                                },
+                                "resources": [
+                                    {
+                                        "type": "Microsoft.Resources/deployments",
+                                        "name": "[concat('flowlogDeployment-', uniqueString(parameters('flowlogName')))]",
+                                        "apiVersion": "2019-10-01",
+                                        "resourceGroup": "[parameters('netWatcherRG')]",
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "parameters": {},
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/networkWatchers/flowLogs",
+                                                        "name": "[parameters('flowlogFullName')]",
+                                                        "apiVersion": "2019-11-01",
+                                                        "location": "[parameters('location')]",
+                                                        "properties": {
+                                                            "targetResourceId": "[parameters('targetResource')]",
+                                                            "storageId": "[parameters('storageId')]",
+                                                            "enabled": "[parameters('enabled')]",
+                                                            "flowAnalyticsConfiguration": {
+                                                                "networkWatcherFlowAnalyticsConfiguration": {
+                                                                    "enabled": true,
+                                                                    "workspaceId": "[parameters('analyticsWorkspaceId')]",
+                                                                    "workspaceRegion": "[parameters('analyticsWorkspaceRegion')]",
+                                                                    "workspaceResourceId": "[parameters('analyticsWorkspaceResourceId')]",
+                                                                    "trafficAnalyticsInterval": 60
+                                                                }
+                                                            },
+                                                            "retentionPolicy": "[parameters('retentionPolicy')]",
+                                                            "format": "[parameters('format')]"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            },
+                            "parameters": {
+                                "storageId": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/storageId')]"
+                                },
+                                "flowlogName": {
+                                    "value": "[field('name')]"
+                                },
+                                "flowlogFullName": {
+                                    "value": "[field('fullName')]"
+                                },
+                                "netWatcherRG": {
+                                    "value": "[resourceGroup().name]"
+                                },
+                                "location": {
+                                    "value": "[field('location')]"
+                                },
+                                "targetResource": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/targetResourceId')]"
+                                },
+                                "enabled": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/enabled')]"
+                                },
+                                "retentionPolicy": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/retentionPolicy')]"
+                                },
+                                "format": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/format')]"
+                                },
+                                "analyticsWorkspaceId": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/flowAnalyticsConfiguration.networkWatcherFlowAnalyticsConfiguration.workspaceId')]"
+                                },
+                                "analyticsWorkspaceRegion": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/flowAnalyticsConfiguration.networkWatcherFlowAnalyticsConfiguration.workspaceRegion')]"
+                                },
+                                "analyticsWorkspaceResourceId": {
+                                    "value": "[field('Microsoft.Network/networkWatchers/flowLogs/flowAnalyticsConfiguration.networkWatcherFlowAnalyticsConfiguration.workspaceResourceId')]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
